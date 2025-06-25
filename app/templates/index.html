@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="welcome">
+    <h1>Добро пожаловать в Markdown Blog!</h1>
+    <p>Это простой блог с поддержкой редактирования в формате Markdown.</p>
+    
+    <div class="features">
+        <div class="feature">
+            <i class="fas fa-edit"></i>
+            <h3>Редактирование Markdown</h3>
+            <p>Создавайте и редактируйте страницы с помощью простого Markdown-редактора.</p>
+        </div>
+        
+        <div class="feature">
+            <i class="fas fa-folder-tree"></i>
+            <h3>Иерархия разделов</h3>
+            <p>Организуйте контент в категории и подкатегории.</p>
+        </div>
+        
+        <div class="feature">
+            <i class="fas fa-palette"></i>
+            <h3>Темы оформления</h3>
+            <p>Переключайтесь между светлой и темной темой одним кликом.</p>
+        </div>
+    </div>
+    
+    <div class="actions">
+        {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('main.login') }}" class="btn">Войти как администратор</a>
+        {% else %}
+            <a href="{{ url_for('main.create_page') }}" class="btn">Создать страницу</a>
+            <a href="{{ url_for('main.backup') }}" class="btn">Создать резервную копию</a>
+        {% endif %}
+        <button class="btn" id="theme-toggle-btn">Переключить тему</button>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+<nav>
+    <h1><a href="{{ url_for('main.index') }}">Markdown Blog</a></h1>
+    <ul>
+        {% for page in pages %}
+            <li>
+                <a href="{{ url_for('main.page', slug=page.slug) }}">{{ page.title }}</a>
+                {% if page.children %}
+                    <ul>
+                        {% for child in page.children %}
+                            <li><a href="{{ url_for('main.page', slug=child.slug) }}">{{ child.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    
+    {% if current_user.is_authenticated %}
+        <div class="admin-links">
+            <h3>Администрирование</h3>
+            <ul>
+                <li><a href="{{ url_for('main.create_page') }}">Создать страницу</a></li>
+                <li><a href="{{ url_for('main.backup') }}">Резервное копирование</a></li>
+            </ul>
+        </div>
+    {% endif %}
+</nav>
