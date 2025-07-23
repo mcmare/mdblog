@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Настройки профиля</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.username.label(class="form-label") }}
+                        {{ form.username(class="form-control") }}
+                        {% if form.username.errors %}
+                            <div class="text-danger">
+                                {% for error in form.username.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control") }}
+                        {% if form.email.errors %}
+                            <div class="text-danger">
+                                {% for error in form.email.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.avatar.label(class="form-label") }}
+                        {{ form.avatar(class="form-control") }}
+                        <div class="form-text">Поддерживаемые форматы: JPG, PNG, JPEG. Максимальный размер: 16MB</div>
+                        {% if form.avatar.errors %}
+                            <div class="text-danger">
+                                {% for error in form.avatar.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h5>Смена пароля</h5>
+                    <p class="text-muted small">Заполните поля ниже только если хотите изменить пароль</p>
+
+                    <div class="mb-3">
+                        {{ form.current_password.label(class="form-label") }}
+                        {{ form.current_password(class="form-control") }}
+                        {% if form.current_password.errors %}
+                            <div class="text-danger">
+                                {% for error in form.current_password.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.new_password.label(class="form-label") }}
+                        {{ form.new_password(class="form-control") }}
+                        {% if form.new_password.errors %}
+                            <div class="text-danger">
+                                {% for error in form.new_password.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.confirm_password.label(class="form-label") }}
+                        {{ form.confirm_password(class="form-control") }}
+                        {% if form.confirm_password.errors %}
+                            <div class="text-danger">
+                                {% for error in form.confirm_password.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">Сохранить изменения</button>
+                        <a href="{{ url_for('profile') }}" class="btn btn-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Текущий аватар</h5>
+                {% if current_user.avatar %}
+                    <img src="{{ url_for('static', filename='uploads/' + current_user.avatar) }}" alt="Avatar" class="user-avatar-large mb-3">
+                {% else %}
+                    <div class="user-avatar-large-placeholder mb-3">
+                        <i class="bi bi-person" style="font-size: 3rem;"></i>
+                    </div>
+                {% endif %}
+                <p class="text-muted small">Загрузите новое изображение, чтобы изменить аватар</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

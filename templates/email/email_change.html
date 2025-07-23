@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Подтверждение смены email</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2 style="color: #333;">Здравствуйте, {{ user.username }}!</h2>
+
+        <p>Вы запросили смену email адреса на нашем блоге.</p>
+
+        <p><strong>Новый email:</strong> {{ user.new_email }}</p>
+
+        <p>Пожалуйста, подтвердите смену email, нажав на кнопку ниже:</p>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{{ url_for('change_email', token=user.email_change_token, _external=True) }}"
+               style="background-color: #007bff; color: white; padding: 12px 24px;
+                      text-decoration: none; border-radius: 5px; display: inline-block;">
+                Подтвердить смену email
+            </a>
+        </div>
+
+        <p>Или перейдите по ссылке:</p>
+        <p>
+            <a href="{{ url_for('change_email', token=user.email_change_token, _external=True) }}">
+                {{ url_for('change_email', token=user.email_change_token, _external=True) }}
+            </a>
+        </p>
+
+        <p style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            Если вы не запрашивали смену email, просто проигнорируйте это письмо.
+        </p>
+
+        <p style="margin-top: 20px; font-size: 0.9em; color: #666;">
+            С уважением,<br>
+            Команда Мой блог
+        </p>
+    </div>
+</body>
+</html>

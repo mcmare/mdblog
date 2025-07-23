@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article>
+    <header class="mb-4">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+            <h1 class="mb-0">{{ post.title }}</h1>
+            <!-- Показываем кнопки редактирования/удаления только автору статьи -->
+            {% if current_user.is_authenticated and post.author == current_user %}
+            <div class="d-flex gap-2 ms-3">
+                <a href="{{ url_for('edit_post', post_id=post.id) }}" class="btn btn-sm btn-outline-primary action-btn" title="Редактировать">
+                    <i class="bi-pencil-square"></i>
+                </a>
+                <button type="button" class="btn btn-sm btn-outline-danger action-btn" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Удалить">
+                    <i class="bi-trash theme-icon-light"></i>
+                    <i class="bi-trash-fill theme-icon-dark" style="display: none;"></i>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+        <div class="d-flex align-items-center gap-3 text-muted">
+            <small>Автор: {{ post.author.username }}</small>
+            <small>Опубликовано: {{ post.date_posted.strftime('%d.%m.%Y %H:%M') }}</small>
+            {% if post.date_updated %}
+            <small>Обновлено: {{ post.date_updated.strftime('%d.%m.%Y %H:%M') }}</small>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="post-content">
+        {{ post.content | markdown | safe }}
+    </div>
+
+    <div class="mt-4 pt-3 border-top">
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">← Назад к статьям</a>
+    </div>
+</article>
+
+<!-- Модальное окно подтверждения удаления (показываем только автору) -->
+{% if current_user.is_authenticated and post.author == current_user %}
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Подтверждение удаления</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Вы уверены, что хотите удалить статью "{{ post.title }}"? Это действие нельзя отменить.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+// Функция копирования кода
+function copyCode(button) {
+    const codeBlock = button.closest('.codehilite').querySelector('pre');
+    const text = codeBlock.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        const iconElement = button.querySelector('i');
+        const originalClass = iconElement.className;
+        iconElement.className = 'bi bi-check-lg';
+        setTimeout(() => {
+            iconElement.className = originalClass;
+        }, 2000);
+    });
+}
+
+// Добавляем кнопки копирования ко всем блокам кода
+document.addEventListener('DOMContentLoaded', function() {
+    const codeBlocks = document.querySelectorAll('.codehilite');
+    codeBlocks.forEach(block => {
+        const copyButton = document.createElement('button');
+        copyButton.className = 'copy-btn';
+        copyButton.innerHTML = '<i class="bi bi-copy"></i>';
+        copyButton.onclick = () => copyCode(copyButton);
+        block.style.position = 'relative';
+        block.appendChild(copyButton);
+    });
+
+    // Обновляем иконки в зависимости от темы
+    const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+    updateIcons(currentTheme);
+});
+
+function updateIcons(theme) {
+    const lightIcons = document.querySelectorAll('.theme-icon-light');
+    const darkIcons = document.querySelectorAll('.theme-icon-dark');
+
+    if (theme === 'dark') {
+        lightIcons.forEach(icon => icon.style.display = 'none');
+        darkIcons.forEach(icon => icon.style.display = 'inline-block');
+    } else {
+        lightIcons.forEach(icon => icon.style.display = 'inline-block');
+        darkIcons.forEach(icon => icon.style.display = 'none');
+    }
+}
+</script>
+{% endblock %}

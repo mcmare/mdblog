@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Создать новую статью</h1>
+
+<form method="POST">
+    {{ form.hidden_tag() }}  <!-- Важно для CSRF защиты -->
+
+    <div class="mb-3">
+        {{ form.title.label(class="form-label") }}
+        {{ form.title(class="form-control") }}
+        {% if form.title.errors %}
+            <div class="text-danger">
+                {% for error in form.title.errors %}
+                    <small>{{ error }}</small>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.content.label(class="form-label") }}
+        {{ form.content(class="form-control", rows="15") }}
+        {% if form.content.errors %}
+            <div class="text-danger">
+                {% for error in form.content.errors %}
+                    <small>{{ error }}</small>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success">Опубликовать</button>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Отмена</a>
+    </div>
+</form>
+
+<div class="mt-4">
+    <h6>Пример Markdown:</h6>
+    <pre><code># Заголовок
+## Подзаголовок
+
+**Жирный текст** и *курсив*
+
+- Список
+- Пункт 2
+
+```python
+def hello():
+    print("Hello, World!")```
+</code></pre>
+
+</div>
+{% endblock %}
